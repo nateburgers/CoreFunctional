@@ -8,6 +8,9 @@ container classes in CoreFoundation. A secondary objective is to remain simple a
 with minimal compiler magic. CoreFunctional is accomplished using the `overloadable` clang
 function attribute.
 
+## Installation
+`curl https://raw.githubusercontent.com/nateburgers/CoreFunctional/master/install.sh | bash -s $YOUR_PROJECT_DIRECTORY`
+
 ## Supported Classes
 - NSArray
 - NSDictionary
