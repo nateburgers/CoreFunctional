@@ -23,22 +23,29 @@ RFSBinaryBlock OVERLOADED RFSApply(RFSTernaryBlock, id x);
 RFSTernaryBlock OVERLOADED RFSApply(RFSQuaternaryBlock, id x);
 
 #pragma mark - Each
-NSDictionary *OVERLOADED RFSEach(NSDictionary *input, void (^f)(id<NSCopying> key, id value));
-NSSet *OVERLOADED RFSEach(NSDictionary *input, void (^f)(id element));
-NSArray *OVERLOADED RFSEach(NSArray *input, void (^f)(id element));
+void OVERLOADED RFSEach(NSDictionary *input, void (^f)(id<NSCopying> key, id value));
+void OVERLOADED RFSEach(NSDictionary *input, void (^f)(id value));
+void OVERLOADED RFSEach(NSSet *input, void (^f)(id element));
+void OVERLOADED RFSEach(NSArray *input, void (^f)(id element));
+void OVERLOADED RFSEach(NSOrderedSet *input, void (^f)(id element));
 
 #pragma mark - Filter
 NSDictionary *OVERLOADED RFSFilter(NSDictionary *input, BOOL (^predicate)(id<NSCopying> key, id value));
+NSDictionary *OVERLOADED RFSFilter(NSDictionary *input, BOOL (^predicate)(id value));
 NSSet *OVERLOADED RFSFilter(NSSet *input, BOOL (^predicate)(id element));
 NSArray *OVERLOADED RFSFilter(NSArray *input, BOOL (^predicate)(id element));
+NSOrderedSet *OVERLOADED RFSFilter(NSOrderedSet *input, BOOL (^predicate)(id element));
 
 #pragma mark - Fold
 NSDictionary *OVERLOADED RFSFold(NSDictionary *input, id init, id (^f)(id accumulator, id<NSCopying> key, id value));
+NSDictionary *OVERLOADED RFSFold(NSDictionary *input, id init, id (^f)(id accumulator, id value));
 NSSet *OVERLOADED RFSFold(NSSet *input, id init, id (^f)(id accumulator, id element));
-NSArray *OVERLOADED RFSFold(NSArray *input, id init, id (^f)(id accumualator, id element));
+NSArray *OVERLOADED RFSFold(NSArray *input, id init, id (^f)(id accumulator, id element));
+NSOrderedSet *OVERLOADED RFSFold(NSOrderedSet *input, id (^f)(id accumulator, id element));
 
 #pragma mark - Map
-NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id value));
 NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id<NSCopying> key, id value));
+NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id value));
 NSSet *OVERLOADED RFSMap(NSSet *input, id (^f)(id element));
-NSArray *OVERLOADED RFSMap(NSArray *input, id (^)(id element));
+NSArray *OVERLOADED RFSMap(NSArray *input, id (^f)(id element));
+NSOrderedSet *OVERLOADED RFSMap(NSOrderedSet *input, id (^f)(id element));

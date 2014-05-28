@@ -9,9 +9,10 @@ with minimal compiler magic. CoreFunctional is accomplished using the `overloada
 function attribute.
 
 ## Supported Classes
-- NSDictionary
-- NSSet
 - NSArray
+- NSDictionary
+- NSOrderedSet
+- NSSet
 
 ### Apply
 Partially applies a block to an argument, rightmost arguments are applied first.
@@ -29,8 +30,5 @@ Integrate a single result over each element in a collection
 Element-wise generate a new collection
 
 ## Road Map
-Support For
-- Arbitrary keyed and indexed subscriptable classes
-
 Functions
 - FlatMap

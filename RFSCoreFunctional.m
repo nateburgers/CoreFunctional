@@ -32,34 +32,54 @@ RFSTernaryBlock OVERLOADED RFSApply(RFSQuaternaryBlock f, id w) {
 }
 
 #pragma mark - Each
-NSDictionary *OVERLOADED RFSEach(NSDictionary *input, void (^f)(id<NSCopying> key, id value)) {
-  for (id<NSCopying> key in input.allKeys) {
-    id value = input[key];
-    f(key, value);
-  }
+void OVERLOADED RFSEach(NSDictionary *input, void (^f)(id<NSCopying> key, id value)) {
+    [input enumerateKeysAndObjectsUsingBlock:^(id<NSCopying> key, id obj, BOOL *stop) {
+        f(key, obj);
+    }];
 }
 
-NSSet *OVERLOADED RFSEach(NSSet *input, void (^f)(id element)) {
-  for (id element in input) {
-    f(element);
-  }
+void OVERLOADED RFSEach(NSDictionary *input, void (^f)(id value)) {
+    for (id value in input.allValues) {
+        f(value);
+    }
 }
 
-NSArray *OVERLOADED RFSEach(NSArray *input, void (^f)(id element)) {
-  for (id element in input) {
-    f(element);
-  }
+void OVERLOADED RFSEach(NSSet *input, void (^f)(id element)) {
+    for (id element in input) {
+        f(element);
+    }
+}
+
+void OVERLOADED RFSEach(NSArray *input, void (^f)(id element)) {
+    for (id element in input) {
+        f(element);
+    }
+}
+
+void OVERLOADED RFSEach(NSOrderedSet *input, void (^f)(id element)) {
+    for (id element in input) {
+        f(element);
+    }
 }
 
 #pragma mark - Filter
 NSDictionary *OVERLOADED RFSFilter(NSDictionary *input, BOOL (^f)(id<NSCopying> key, id value)) {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    for (id<NSCopying> key in input.allKeys) {
-        id value = input[key];
-        if (f(key,value)) {
-            [result setObject:value forKey:key];
+    [input enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (f(key, obj)) {
+            [result setObject:obj forKey:key];
         }
-    }
+    }];
+    return result;
+}
+
+NSDictionary *OVERLOADED RFSFilter(NSDictionary *input, BOOL (^f)(id value)) {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [input enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (f(obj)) {
+            [result setObject:obj forKey:key];
+        }
+    }];
     return result;
 }
 
@@ -83,11 +103,28 @@ NSArray *OVERLOADED RFSFilter(NSArray *input, BOOL (^f)(id element)) {
     return result;
 }
 
+NSOrderedSet *OVERLOADED RFSFilter(NSOrderedSet *input, BOOL (^f)(id element)) {
+    NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
+    for (id element in input) {
+        if (f(element)) {
+            [result addObject:element];
+        }
+    }
+    return result;
+}
+
 #pragma mark - Fold
 NSDictionary *OVERLOADED RFSFold(NSDictionary *input, id init, id (^f)(id, id, id)) {
-    for (id<NSCopying> key in input.allKeys) {
-        id value = input[key];
-        init = f(init, key, value);
+    __block id result = init;
+    [input enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        result = f(init, key, obj);
+    }];
+    return result;
+}
+
+NSDictionary *OVERLOADED RFSFold(NSDictionary *input, id init, id (^f)(id, id)) {
+    for (id value in input.allValues) {
+        init = f(init, value);
     }
     return init;
 }
@@ -106,22 +143,27 @@ NSArray *OVERLOADED RFSFold(NSArray *input, id init, id (^f)(id, id)) {
     return init;
 }
 
-#pragma mark - Map
-NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id value)) {
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    for (id<NSCopying> key in input.allKeys) {
-        id value = input[key];
-        [result setObject:f(value) forKey:key];
+NSOrderedSet *OVERLOADED RFSFold(NSOrderedSet *input, id init, id (^f)(id, id)) {
+    for (id element in input) {
+        init = f(init, element);
     }
+    return init;
+}
+
+#pragma mark - Map
+NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id<NSCopying> key, id value)) {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    [input enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [result setObject:f(key, obj) forKey:key];
+    }];
     return result;
 }
 
-NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id<NSCopying> key, id value)) {
+NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id value)) {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    for (id<NSCopying> key in input.allKeys) {
-        id value = input[key];
-        [result setObject:f(key, value) forKey:key];
-    }
+    [input enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [result setObject:f(obj) forKey:key];
+    }];
     return result;
 }
 
@@ -136,7 +178,15 @@ NSSet *OVERLOADED RFSMap(NSSet *input, id (^f)(id element)) {
 NSArray *OVERLOADED RFSMap(NSArray *input, id (^f)(id element)) {
     NSMutableArray *result = [NSMutableArray array];
     for (id element in input) {
-        [result addObject:element];
+        [result addObject:f(element)];
+    }
+    return result;
+}
+
+NSOrderedSet *OVERLOADED RFSMap(NSOrderedSet *input, id (^f)(id element)) {
+    NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
+    for (id element in input) {
+        [result addObject:f(element)];
     }
     return result;
 }
