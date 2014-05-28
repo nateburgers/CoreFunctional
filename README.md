@@ -31,5 +31,6 @@ Element-wise generate a new collection
 ## Road Map
 Support For
 - Arbitrary keyed and indexed subscriptable classes
+
 Functions
 - FlatMap
