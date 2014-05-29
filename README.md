@@ -29,9 +29,8 @@ Generate a new collection containing elements that satisfy a predicate
 ### Fold
 Integrate a single result over each element in a collection
 
+### GroupBy
+Group a collection by a value
+
 ### Map
 Element-wise generate a new collection
-
-## Road Map
-Functions
-- FlatMap

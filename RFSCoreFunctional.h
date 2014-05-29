@@ -43,6 +43,13 @@ NSSet *OVERLOADED RFSFold(NSSet *input, id init, id (^f)(id accumulator, id elem
 NSArray *OVERLOADED RFSFold(NSArray *input, id init, id (^f)(id accumulator, id element));
 NSOrderedSet *OVERLOADED RFSFold(NSOrderedSet *input, id (^f)(id accumulator, id element));
 
+#pragma mark - GroupBy
+NSDictionary *OVERLOADED RFSGroupBy(NSDictionary *input, id (^f)(id<NSCopying> key, id value));
+NSDictionary *OVERLOADED RFSGroupBy(NSDictionary *input, id (^f)(id value));
+NSDictionary *OVERLOADED RFSGroupBy(NSSet *input, id (^f)(id element));
+NSDictionary *OVERLOADED RFSGroupBy(NSArray *input, id (^f)(id element));
+NSDictionary *OVERLOADED RFSGroupBy(NSOrderedSet *input, id (^f)(id element));
+
 #pragma mark - Map
 NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id<NSCopying> key, id value));
 NSDictionary *OVERLOADED RFSMap(NSDictionary *input, id (^f)(id value));
